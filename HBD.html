@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Love Letter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            font-family: 'Great Vibes', cursive;
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+        }
+        .password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .code-display {
+            font-size: 24px;
+            letter-spacing: 10px;
+            background: white;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ff2e63;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .keypad button {
+            width: 70px;
+            height: 70px;
+            font-size: 24px;
+            border: none;
+            border-radius: 50%;
+            background: #ff2e63;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .envelope {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            position: relative;
+        }
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            animation: floatUp 1.5s ease-in-out forwards;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-120px); opacity: 0; }
+        }
+        .close-btn, .open-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 22px;
+            border: none;
+            border-radius: 10px;
+            background: #ff2e63;
+            color: white;
+            cursor: pointer;
+            display: none;
+            transition: 0.3s;
+        }
+        .close-btn:hover, .open-btn:hover {
+            background: #ff5c8a;
+            transform: scale(1.05);
+        }
+        .image-gallery {
+            display: none;
+            margin-top: 20px;
+        }
+        .image-gallery img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .image-gallery button {
+            margin-top: 10px;
+            padding: 12px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 20px;
+            background: #ff85a2;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+        .image-gallery button:hover {
+            background: #ff5c8a;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="password-container" id="password-container">
+            <div class="code-display" id="code-display">----</div>
+            <div class="keypad">
+                <button onclick="enterDigit(1)">1</button>
+                <button onclick="enterDigit(2)">2</button>
+                <button onclick="enterDigit(3)">3</button>
+                <button onclick="enterDigit(4)">4</button>
+                <button onclick="enterDigit(5)">5</button>
+                <button onclick="enterDigit(6)">6</button>
+                <button onclick="enterDigit(7)">7</button>
+                <button onclick="enterDigit(8)">8</button>
+                <button onclick="enterDigit(9)">9</button>
+                <button onclick="clearCode()">⌫</button>
+                <button onclick="enterDigit(0)">0</button>
+                <button onclick="checkPassword()">✔</button>
+            </div>
+        </div>
+
+        
+        <button class="open-btn" id="open-btn" onclick="openLetter()">เปิดจดหมาย</button>
+        <div class="envelope" id="envelope">
+            <div class="letter">💖 สุขสันต์วันเกิดนะอ้วน 💖<br>ขอให้วันนี้เป็นวันที่พิเศษที่สุดในโลกเลย<br>ให้เต็มไปด้วยความสุข และรอยยิ้มน่ารักๆของอ้วนนะ 😘</div>
+        </div>
+        <button class="close-btn" id="close-btn" onclick="closeLetter()">ปิดจดหมาย</button>
+
+        <!-- รูปภาพ -->
+        <div class="image-gallery" id="image-gallery">
+            <img id="displayed-image" src="Sun.jpg" alt="Image 1">
+            <button onclick="nextImage()">💖 ดูรูปถัดไป 💖</button>
+        </div>
+    </div>
+
+    <script>
+        let enteredCode = "";
+        const correctCode = "160863";
+
+        function enterDigit(digit) {
+            if (enteredCode.length < 6) {
+                enteredCode += digit;
+                document.getElementById("code-display").innerText = enteredCode.padEnd(4, "-");
+            }
+        }
+
+        function clearCode() {
+            enteredCode = "";
+            document.getElementById("code-display").innerText = "----";
+        }
+
+        function checkPassword() {
+            if (enteredCode === correctCode) {
+                document.getElementById("password-container").style.display = "none";
+                document.getElementById("open-btn").style.display = "block";
+            } else {
+                alert("รหัสผิดอ้วนนน นึกดีๆ!");
+                clearCode();
+            }
+        }
+        let countdown = 30; // จำนวนเวลานับถอยหลัง (30 วินาที)
+const countdownContainer = document.createElement("div");
+countdownContainer.id = "countdown-container";
+countdownContainer.style.display = "flex";
+countdownContainer.style.gap = "10px";
+countdownContainer.style.justifyContent = "center";
+countdownContainer.style.alignItems = "center";
+countdownContainer.style.marginBottom = "20px";
+document.getElementById("open-btn").parentNode.insertBefore(countdownContainer, document.getElementById("open-btn"));
+
+function createBox(id) {
+    const box = document.createElement("div");
+    box.id = id;
+    box.style.width = "80px";
+    box.style.height = "80px";
+    box.style.display = "flex";
+    box.style.flexDirection = "column";
+    box.style.justifyContent = "center";
+    box.style.alignItems = "center";
+    box.style.fontSize = "24px";
+    box.style.color = "white";
+    box.style.background = "#ff85a2";
+    box.style.borderRadius = "10px";
+    box.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.2)";
+    box.innerHTML = `<span>00</span><small>${id}</small>`;
+    return box;
+}
+
+const hoursBox = createBox("ชั่วโมง");
+const minutesBox = createBox("นาที");
+const secondsBox = createBox("วินาที");
+countdownContainer.appendChild(hoursBox);
+countdownContainer.appendChild(minutesBox);
+countdownContainer.appendChild(secondsBox);
+
+function updateCountdown() {
+    let hours = Math.floor(countdown / 3600);
+    let minutes = Math.floor((countdown % 3600) / 60);
+    let seconds = countdown % 60;
+    
+    hoursBox.firstChild.textContent = hours.toString().padStart(2, '0');
+    minutesBox.firstChild.textContent = minutes.toString().padStart(2, '0');
+    secondsBox.firstChild.textContent = seconds.toString().padStart(2, '0');
+    
+    if (countdown > 0) {
+        countdown--;
+        setTimeout(updateCountdown, 1000);
+    } else {
+        alert("🎉 อายุ 21 ปีแล้วนะ แก่กว่าเค้าอีก 1 ปีแล้ววว 🎂");
+        countdownContainer.style.display = "none";
+        document.getElementById("open-btn").disabled = false; // เปิดใช้งานปุ่ม
+    }
+}
+
+document.getElementById("open-btn").disabled = true; // ปิดปุ่มไว้ก่อน
+updateCountdown();
+
+
+        function openLetter() {
+            document.getElementById("envelope").style.display = "block";
+            document.getElementById("open-btn").style.display = "none";
+            document.getElementById("close-btn").style.display = "block";
+            document.getElementById("image-gallery").style.display = "block";
+
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    let icon = document.createElement("div");
+                    icon.className = "floating-icon";
+                    icon.innerHTML = Math.random() > 0.5 ? "❤️" : "🎂";
+                    icon.style.left = Math.random() * 100 + "%";
+                    icon.style.top = "50px";
+                    document.body.appendChild(icon);
+                    setTimeout(() => icon.remove(), 1500);
+                }, i * 200);
+            }
+        }
+        function closeLetter() {
+        document.getElementById("envelope").style.display = "none";
+        document.getElementById("open-btn").style.display = "block";
+        document.getElementById("close-btn").style.display = "none";
+        document.getElementById("image-gallery").style.display = "none";
+    }
+
+    // **เปลี่ยนรูปภาพ**
+    let images = ["Sun.jpg", "Sun2.jpg", "Sun3.jpg", "Sun4.jpg", "Sun5.jpg", "Sun6.jpg"];
+    let currentImageIndex = 0;
+
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        document.getElementById("displayed-image").src = images[currentImageIndex];
+    }
+       
+    </script>
+    
+    
+</body>
+</html>
